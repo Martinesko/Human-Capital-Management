@@ -1,0 +1,28 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Human Capital Management";
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/hcm-login.css" />
+}
+<div class="hcm-login-center">
+    <div class="hcm-login-box">
+        <h1>Human Capital Management</h1>
+        <p class="hcm-login-subtitle">
+            Empowering your organization to manage people, departments, and HR processes efficiently.
+        </p>
+        <form id="account" method="post">
+            <div class="hcm-login-form">
+                <input asp-for="Input.Email" class="hcm-login-input" autocomplete="username" aria-required="true" placeholder="Email" />
+                <input asp-for="Input.Password" class="hcm-login-input" autocomplete="current-password" aria-required="true" placeholder="Password" />
+                <button id="login-submit" type="submit" class="hcm-login-btn">Login to your account</button>
+            </div>
+        </form>
+        <button type="button" class="hcm-login-back-btn" onclick="window.history.back();">Go Back</button>
+    </div>
+</div>
+

@@ -1,0 +1,24 @@
+﻿@model HCM.Web.ViewModels.Employee.EmployeeInfoViewModel
+
+<div class="hcm-login-center">
+    <div class="employee-info-card">
+        <h1>Employee Information</h1>
+        <p class="hcm-login-subtitle">View and manage your personal details below.</p>
+        <div class="hcm-login-form">
+            <div><strong>Full Name:</strong> @Model.FullName</div>
+            <div><strong>Email:</strong> @Model.Email</div>
+            <div><strong>Department:</strong> @Model.Department</div>
+            <div><strong>Job Title:</strong> @Model.JobTitle</div>
+            <div><strong>Salary:</strong> @Model.Salary.ToString("C")</div>
+        </div>
+        <div class="employee-info-actions">
+            <a asp-area="Identity" asp-page="/Account/ChangePassword" class="employee-info-btn-change">
+                Change Password
+            </a>
+            <form method="post" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="/">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="employee-info-btn-logout">Log Out</button>
+            </form>
+        </div>
+    </div>
+</div>

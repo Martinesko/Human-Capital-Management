@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HCM.Data\HCM.Data.csproj" />
+    <ProjectReference Include="..\HCM.Web.ViewModels\HCM.Web.ViewModels.csproj" />
+  </ItemGroup>
+
+</Project>

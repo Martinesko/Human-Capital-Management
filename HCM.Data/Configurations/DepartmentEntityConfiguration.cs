@@ -1,0 +1,33 @@
+﻿using HCM.Data.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using static HCM.Common.HCMConstants.DepartmentConstants;
+
+namespace HCM.Data.Configurations
+{
+    internal class DepartmentEntityConfiguration : IEntityTypeConfiguration<Department>
+    {
+        public void Configure(EntityTypeBuilder<Department> builder)
+        {
+            builder.HasData(new Department[]
+            {
+                new Department
+                {
+                    Id = Guid.Parse(HumanResources),
+                    Name = "Human Resources"
+                },
+                new Department
+                {
+                    Id = Guid.Parse(Finance),
+                    Name = "Finance"
+                },
+                new Department
+                {
+                    Id = Guid.Parse(IT),
+                    Name = "IT"
+                }
+            });
+        }
+    }
+}
