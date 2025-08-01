@@ -1,0 +1,15 @@
+﻿@{
+    Layout = "/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/change-password.css" />
+}
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="col-md-6">
+        @RenderBody()
+    </div>
+</div>
+
+@RenderSection("Scripts", required: false)

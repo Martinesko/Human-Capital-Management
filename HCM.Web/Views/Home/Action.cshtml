@@ -1,0 +1,29 @@
+﻿<div class="hcm-login-center">
+    <div class="employee-info-card">
+        <h1>Action Panel</h1>
+        <div class="hcm-login-form">
+        </div>
+        <div class="employee-info-actions">
+            <a asp-controller="Employee" class="employee-info-btn-yellow">
+                Manage employees
+            </a>
+            @if (ViewBag.IsManager == true)
+            {
+                <a asp-controller="Home" asp-action="Index" asp-route-showProfile="true" class="employee-info-btn-change">
+                    View Profile
+                </a>
+            }
+            else if (ViewBag.IsManager == false)
+            {
+                <a asp-area="Identity" asp-page="/Account/Manage/ChangePassword" class="employee-info-btn-change">
+                    Change password
+                </a>
+            }
+            <form method="post" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="/">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="employee-info-btn-logout">Log Out</button>
+            </form>
+        </div>
+    </div>
+</div>
+

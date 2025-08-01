@@ -7,7 +7,7 @@ using static HCM.Common.HCMConstants.EmployeeConstants;
 
 namespace HCM.Data.Configurations
 {
-    class EmployeeEntityConfiguration : IEntityTypeConfiguration<Employee>
+    internal class EmployeeEntityConfiguration : IEntityTypeConfiguration<Employee>
     {
         public void Configure(EntityTypeBuilder<Employee> builder)
         {
@@ -18,17 +18,15 @@ namespace HCM.Data.Configurations
                     Id = Guid.Parse(AliceId),
                     FirstName = "Alice",
                     LastName = "Johnson",
-                    Email = "alice.johnson@example.com",
                     JobTitle = "HR Manager",
                     Salary = 60000m,
-                    DepartmentId = Guid.Parse(HumanResources)
+                    DepartmentId = Guid.Parse(Engineering)
                 },
                 new Employee
                 {
                     Id = Guid.Parse(BobId),
                     FirstName = "Bob",
                     LastName = "Smith",
-                    Email = "bob.smith@example.com",
                     JobTitle = "Accountant",
                     Salary = 55000m,
                     DepartmentId = Guid.Parse(Finance)
@@ -38,7 +36,6 @@ namespace HCM.Data.Configurations
                     Id = Guid.Parse(CarolId),
                     FirstName = "Carol",
                     LastName = "Williams",
-                    Email = "carol.williams@example.com",
                     JobTitle = "IT Specialist",
                     Salary = 65000m,
                     DepartmentId = Guid.Parse(IT)

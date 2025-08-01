@@ -7,7 +7,7 @@ using static HCM.Common.HCMConstants.EmployeeConstants;
 
 namespace HCM.Data.Configurations
 {
-    class DepartmentManagerEntityConfiguration : IEntityTypeConfiguration<DepartmentManager>
+    internal class DepartmentManagerEntityConfiguration : IEntityTypeConfiguration<DepartmentManager>
     {
         public void Configure(EntityTypeBuilder<DepartmentManager> builder)
         {

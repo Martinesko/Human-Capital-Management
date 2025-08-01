@@ -158,7 +158,7 @@ namespace HCM.Data.Migrations
                         new
                         {
                             Id = new Guid("11111111-1111-1111-1111-111111111111"),
-                            Name = "Human Resources"
+                            Name = "Engineering"
                         },
                         new
                         {
@@ -203,11 +203,6 @@ namespace HCM.Data.Migrations
                     b.Property<Guid>("DepartmentId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -237,7 +232,6 @@ namespace HCM.Data.Migrations
                         {
                             Id = new Guid("44444444-4444-4444-4444-444444444444"),
                             DepartmentId = new Guid("11111111-1111-1111-1111-111111111111"),
-                            Email = "alice.johnson@example.com",
                             FirstName = "Alice",
                             JobTitle = "HR Manager",
                             LastName = "Johnson",
@@ -247,7 +241,6 @@ namespace HCM.Data.Migrations
                         {
                             Id = new Guid("55555555-5555-5555-5555-555555555555"),
                             DepartmentId = new Guid("22222222-2222-2222-2222-222222222222"),
-                            Email = "bob.smith@example.com",
                             FirstName = "Bob",
                             JobTitle = "Accountant",
                             LastName = "Smith",
@@ -257,7 +250,6 @@ namespace HCM.Data.Migrations
                         {
                             Id = new Guid("66666666-6666-6666-6666-666666666666"),
                             DepartmentId = new Guid("33333333-3333-3333-3333-333333333333"),
-                            Email = "carol.williams@example.com",
                             FirstName = "Carol",
                             JobTitle = "IT Specialist",
                             LastName = "Williams",

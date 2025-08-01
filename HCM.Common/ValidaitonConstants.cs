@@ -12,6 +12,9 @@
             public const int LastNameMaxLength = 50;
             public const int EmailMaxLength = 100;
             public const int JobTitleMaxLength = 100;
+            public const int PasswordMinLength = 6;
+            public const int PasswordMaxLength = 100;
         }
+
     }
 }

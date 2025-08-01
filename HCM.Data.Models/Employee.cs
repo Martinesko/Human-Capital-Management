@@ -21,9 +21,6 @@ namespace HCM.Data.Models
         [MaxLength(LastNameMaxLength)]
         public string LastName { get; set; } = null!;
 
-        [MaxLength(EmailMaxLength)]
-        public string Email { get; set; } = null!;
-
         [MaxLength(JobTitleMaxLength)]
         public string JobTitle { get; set; } = null!;
        

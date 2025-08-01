@@ -13,7 +13,7 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
        
         builder.Services.AddDbContext<HcmDbContext>(options =>
             options.UseSqlServer(connectionString));
@@ -33,6 +33,8 @@ public class Program
                 .AddEntityFrameworkStores<HcmDbContext>();
 
         builder.Services.AddControllersWithViews();
+        builder.Services.AddRazorPages();
+
 
         builder.Services.AddScoped<IEmployeeService, EmployeeService>();
 

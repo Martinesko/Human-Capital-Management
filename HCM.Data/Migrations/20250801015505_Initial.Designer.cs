@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HCM.Data.Migrations
 {
     [DbContext(typeof(HcmDbContext))]
-    [Migration("20250729164825_Initial")]
+    [Migration("20250801015505_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -156,6 +156,23 @@ namespace HCM.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Departments");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Name = "Engineering"
+                        },
+                        new
+                        {
+                            Id = new Guid("22222222-2222-2222-2222-222222222222"),
+                            Name = "Finance"
+                        },
+                        new
+                        {
+                            Id = new Guid("33333333-3333-3333-3333-333333333333"),
+                            Name = "IT"
+                        });
                 });
 
             modelBuilder.Entity("HCM.Data.Models.DepartmentManager", b =>
@@ -171,6 +188,13 @@ namespace HCM.Data.Migrations
                     b.HasIndex("DepartmentId");
 
                     b.ToTable("DepartmentsManagers");
+
+                    b.HasData(
+                        new
+                        {
+                            ManagerId = new Guid("55555555-5555-5555-5555-555555555555"),
+                            DepartmentId = new Guid("22222222-2222-2222-2222-222222222222")
+                        });
                 });
 
             modelBuilder.Entity("HCM.Data.Models.Employee", b =>
@@ -181,11 +205,6 @@ namespace HCM.Data.Migrations
 
                     b.Property<Guid>("DepartmentId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -210,6 +229,35 @@ namespace HCM.Data.Migrations
                     b.HasIndex("DepartmentId");
 
                     b.ToTable("Employees");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("44444444-4444-4444-4444-444444444444"),
+                            DepartmentId = new Guid("11111111-1111-1111-1111-111111111111"),
+                            FirstName = "Alice",
+                            JobTitle = "HR Manager",
+                            LastName = "Johnson",
+                            Salary = 60000m
+                        },
+                        new
+                        {
+                            Id = new Guid("55555555-5555-5555-5555-555555555555"),
+                            DepartmentId = new Guid("22222222-2222-2222-2222-222222222222"),
+                            FirstName = "Bob",
+                            JobTitle = "Accountant",
+                            LastName = "Smith",
+                            Salary = 55000m
+                        },
+                        new
+                        {
+                            Id = new Guid("66666666-6666-6666-6666-666666666666"),
+                            DepartmentId = new Guid("33333333-3333-3333-3333-333333333333"),
+                            FirstName = "Carol",
+                            JobTitle = "IT Specialist",
+                            LastName = "Williams",
+                            Salary = 65000m
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

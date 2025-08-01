@@ -6,7 +6,7 @@ namespace HCM.Common
     {
         public static class DepartmentConstants
         {
-            public const string HumanResources = "11111111-1111-1111-1111-111111111111";
+            public const string Engineering = "11111111-1111-1111-1111-111111111111";
             public const string Finance = "22222222-2222-2222-2222-222222222222";
             public const string IT = "33333333-3333-3333-3333-333333333333";
         }

@@ -1,28 +1,38 @@
 ﻿@page
-@model LoginModel
-
+@using static HCM.Common.ValidaitonConstants.Employee;
+@model HCM.Web.Areas.Identity.Pages.Account.LoginModel
 @{
-    ViewData["Title"] = "Human Capital Management";
-    Layout = "/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Log in";
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/hcm-login.css" />
-}
-<div class="hcm-login-center">
-    <div class="hcm-login-box">
-        <h1>Human Capital Management</h1>
-        <p class="hcm-login-subtitle">
-            Empowering your organization to manage people, departments, and HR processes efficiently.
-        </p>
-        <form id="account" method="post">
-            <div class="hcm-login-form">
-                <input asp-for="Input.Email" class="hcm-login-input" autocomplete="username" aria-required="true" placeholder="Email" />
-                <input asp-for="Input.Password" class="hcm-login-input" autocomplete="current-password" aria-required="true" placeholder="Password" />
-                <button id="login-submit" type="submit" class="hcm-login-btn">Login to your account</button>
-            </div>
-        </form>
-        <button type="button" class="hcm-login-back-btn" onclick="window.history.back();">Go Back</button>
-    </div>
+<link rel="stylesheet" href="~/css/hcm-login.css" />
+
+<div class="login-container">
+    <h2>@ViewData["Title"]</h2>
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="form-group">
+            <label asp-for="Input.Email"></label>
+            <input asp-for="Input.Email"
+                   class="form-control"
+                   maxlength="@EmailMaxLength" />
+            <span asp-validation-for="Input.Email" class="small text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Input.Password"></label>
+            <input asp-for="Input.Password"
+                   class="form-control"
+                   type="password"
+                   minlength="@PasswordMinLength"
+                   maxlength="@PasswordMaxLength" />
+            <span asp-validation-for="Input.Password" class="small text-danger"></span>
+        </div>
+        <button type="submit" class="btn btn-success">Log in</button>
+        <a href="javascript:history.back()" class="back-btn">Go Back</a>
+    </form>
 </div>
 
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

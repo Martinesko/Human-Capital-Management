@@ -1,0 +1,117 @@
+﻿@using HCM.Common
+@model CreateEmployeeViewModel
+
+<link rel="stylesheet" href="~/css/employee-create.css" asp-append-version="true" />
+<div class="container">
+    <div class="header">
+        <h1>@(Model?.Id == null ? "Create Employee" : "Edit Employee")</h1>
+    </div>
+
+    <div class="form-container">
+        <form method="post" asp-action="@(Model?.Id == null ? "Create" : "Edit")">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="FirstName"></label>
+                <input asp-for="FirstName"
+                       class="form-control"
+                       maxlength="@ValidaitonConstants.Employee.FirstNameMaxLength" />
+                <span asp-validation-for="FirstName" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName"></label>
+                <input asp-for="LastName"
+                       class="form-control"
+                       maxlength="@ValidaitonConstants.Employee.LastNameMaxLength" />
+                <span asp-validation-for="LastName" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <input asp-for="Email"
+                       class="form-control"
+                       maxlength="@ValidaitonConstants.Employee.EmailMaxLength" />
+                <span asp-validation-for="Email" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="JobTitle"></label>
+                <input asp-for="JobTitle"
+                       class="form-control"
+                       maxlength="@ValidaitonConstants.Employee.JobTitleMaxLength" />
+                <span asp-validation-for="JobTitle" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Salary"></label>
+                <input asp-for="Salary" class="form-control" />
+                <span asp-validation-for="Salary" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Department"></label>
+                <select asp-for="Department"
+                        asp-items="@(new SelectList(ViewBag.Departments, "Id", "Name"))"
+                        class="form-control"></select>
+                <span asp-validation-for="Department" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Role"></label>
+                <select asp-for="Role"
+                        asp-items="@(new SelectList(ViewBag.Roles, "Value", "Text"))"
+                        class="form-control"></select>
+                <span asp-validation-for="Role" class="small text-danger"></span>
+            </div>
+            @if (Model?.Id == null)
+            {
+                <div class="form-group">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password"
+                           type="password"
+                           class="form-control"
+                           minlength="@ValidaitonConstants.Employee.PasswordMinLength"
+                           maxlength="@ValidaitonConstants.Employee.PasswordMaxLength" />
+                    <span asp-validation-for="Password" class="small text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ConfirmPassword"></label>
+                    <input asp-for="ConfirmPassword"
+                           type="password"
+                           class="form-control"
+                           minlength="@ValidaitonConstants.Employee.PasswordMinLength"
+                           maxlength="@ValidaitonConstants.Employee.PasswordMaxLength" />
+                    <span asp-validation-for="ConfirmPassword" class="small text-danger"></span>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password"
+                           type="password"
+                           class="form-control"
+                           placeholder="Leave blank to keep current password"
+                           minlength="@ValidaitonConstants.Employee.PasswordMinLength"
+                           maxlength="@ValidaitonConstants.Employee.PasswordMaxLength" />
+                    <span asp-validation-for="Password" class="small text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ConfirmPassword"></label>
+                    <input asp-for="ConfirmPassword"
+                           type="password"
+                           class="form-control"
+                           placeholder="Leave blank to keep current password"
+                           minlength="@ValidaitonConstants.Employee.PasswordMinLength"
+                           maxlength="@ValidaitonConstants.Employee.PasswordMaxLength" />
+                    <span asp-validation-for="ConfirmPassword" class="small text-danger"></span>
+                </div>
+            }
+            <div class="form-actions">
+                <button type="submit" class="btn btn-success">
+                    @(Model?.Id == null ? "Create Employee" : "Update Employee")
+                </button>
+                <a href="/Employee" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

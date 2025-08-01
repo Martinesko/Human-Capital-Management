@@ -14,8 +14,8 @@ namespace HCM.Data.Configurations
             {
                 new Department
                 {
-                    Id = Guid.Parse(HumanResources),
-                    Name = "Human Resources"
+                    Id = Guid.Parse(Engineering),
+                    Name = "Engineering"
                 },
                 new Department
                 {
