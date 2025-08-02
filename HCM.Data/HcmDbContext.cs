@@ -65,7 +65,6 @@ namespace HCM.Data
                 .HasForeignKey(ur => ur.UserId)
                 .IsRequired();
 
-
             if (seed)
             {
                 modelBuilder.ApplyConfiguration(new DepartmentEntityConfiguration());

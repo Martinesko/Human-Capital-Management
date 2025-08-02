@@ -14,6 +14,8 @@
             public const int JobTitleMaxLength = 100;
             public const int PasswordMinLength = 6;
             public const int PasswordMaxLength = 100;
+
+            public const string PasswordsDontMatch = "Passwords do not match.";
         }
 
     }

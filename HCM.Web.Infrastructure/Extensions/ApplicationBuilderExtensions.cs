@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using static HCM.Common.HCMConstants.RoleConstants;
-using static HCM.Common.HCMConstants.LoginConstants;
-using static HCM.Common.HCMConstants.EmployeeConstants;
-using static HCM.Common.HCMConstants.DepartmentConstants;
+using static HCM.Common.SeedConstants.LoginConstants;
+using static HCM.Common.SeedConstants.EmployeeConstants;
+using static HCM.Common.SeedConstants.DepartmentConstants;
 
 namespace HCM.Web.Infrastructure.Extensions
 {

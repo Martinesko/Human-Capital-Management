@@ -152,7 +152,7 @@ namespace HCM.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Departments");
+                    b.ToTable("Departments", (string)null);
 
                     b.HasData(
                         new
@@ -184,7 +184,7 @@ namespace HCM.Data.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("DepartmentsManagers");
+                    b.ToTable("DepartmentsManagers", (string)null);
 
                     b.HasData(
                         new
@@ -225,7 +225,7 @@ namespace HCM.Data.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employees", (string)null);
 
                     b.HasData(
                         new

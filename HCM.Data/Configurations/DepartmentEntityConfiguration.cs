@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using static HCM.Common.HCMConstants.DepartmentConstants;
+using static HCM.Common.SeedConstants.DepartmentConstants;
 
 namespace HCM.Data.Configurations
 {
@@ -10,8 +10,8 @@ namespace HCM.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Department> builder)
         {
-            builder.HasData(new Department[]
-            {
+            builder.HasData(
+            [
                 new Department
                 {
                     Id = Guid.Parse(Engineering),
@@ -27,7 +27,7 @@ namespace HCM.Data.Configurations
                     Id = Guid.Parse(IT),
                     Name = "IT"
                 }
-            });
+            ]);
         }
     }
 }

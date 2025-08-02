@@ -19,125 +19,79 @@ namespace HCM.Services.Data
             this.context = context;
             this.userManager = userManager;
         }
-        public EmployeeInfoViewModel? GetEmployeeInfoByUserId(string userId)
-        {
-            var user = context.Users.FirstOrDefault(u => u.Id.ToString() == userId);
-            if (user == null) {
-                return null;
-            }
-            var employeeId = user?.EmployeeId;
-            var role = userManager.GetRolesAsync(user).Result.FirstOrDefault();
-            
 
-            if (employeeId != null)
-            {
-                var employeeInfoViewModel = context.Employees.Include(e => e.Department).FirstOrDefault(e => e.Id == employeeId);
-                return new EmployeeInfoViewModel
-                {
-                    FullName = $"{employeeInfoViewModel?.FirstName ?? string.Empty} {employeeInfoViewModel?.LastName ?? string.Empty}",
-                    JobTitle = employeeInfoViewModel?.JobTitle ?? string.Empty,
-                    Salary = employeeInfoViewModel?.Salary ?? 0,
-                    Department = employeeInfoViewModel?.Department.Name ?? string.Empty,
-                    Email = user?.Email ?? string.Empty,
-                    UserRole = role,
-                    IsPasswordChanged = user.IsPasswordChanged
-                };
-            }
-            return null;
-        } 
-        public async Task<List<EmployeeUserViewModel>> GetAllEmployeesAync()
+        public async Task<ProfileViewModel> GetByIdAsync(string userId)
         {
-            var employees = await context.Employees
+            return await context.Users
+            .Include(u => u.Employee)
+            .ThenInclude(e => e!.Department)
+            .Include(u => u.UsersRoles)
+            .ThenInclude(ur => ur.Role)
+            .Where(u => u.Id == Guid.Parse(userId))
+            .Select(u => new ProfileViewModel()
+            {
+                FullName = $"{u.Employee!.FirstName} {u.Employee.LastName}",
+                JobTitle = u.Employee.JobTitle,
+                Salary = u.Employee.Salary,
+                Department = u.Employee.Department.Name,
+                Email = u.Email!,
+                Role = u.UsersRoles.First().Role.Name!,
+                IsPasswordChanged = u.IsPasswordChanged
+            }).FirstAsync();
+        }
+        public async Task<ICollection<EmployeeViewModel>> AllAsync(EmployeeAllViewModel model, string id, bool isAdmin)
+        {
+            ICollection<EmployeeViewModel> employees = await context.Employees
+                .AsNoTracking()
                 .Include(e => e.Department)
-                .ToListAsync();
-
-            var result = new List<EmployeeUserViewModel>();
-
-            foreach (var e in employees)
-            {
-                var user = await context.Users.FirstOrDefaultAsync(u => u.EmployeeId == e.Id);
-                IList<string> roles = new List<string>();
-                string userId = string.Empty;
-                string userPassword = string.Empty;
-                string userEmail = string.Empty;
-
-                if (user != null)
+                .ThenInclude(d => d.Managers)
+                .Include(e => e.Users)
+                .ThenInclude(u => u.UsersRoles)
+                .ThenInclude(ur => ur.Role)
+                .Where(e => isAdmin || e.Department.Managers.Any(m => m.Manager.Users.First().Id == Guid.Parse(id)))
+                .Select(e => new EmployeeViewModel
                 {
-                    roles = await userManager.GetRolesAsync(user);
-                    userId = user.Id.ToString();
-                    userPassword = user.PasswordHash ?? string.Empty;
-                    userEmail = user.Email ?? string.Empty;
-                }
-
-                result.Add(new EmployeeUserViewModel
-                {
-                    Id = e.Id.GetHashCode(),
+                    Id = e.Id.ToString(),
                     FirstName = e.FirstName,
                     LastName = e.LastName,
                     JobTitle = e.JobTitle,
                     Salary = e.Salary,
                     Department = e.Department.Name,
-                    UserId = userId,
-                    UserPassword = userPassword,
-                    UserRole = roles[0],
-                    UserEmail = userEmail
-                });
-            }
+                    Role = e.Users.First().UsersRoles.First().Role.Name!,
+                    Email = e.Users.First().Email!,
+                })
+                .ToListAsync();
 
-            return result;
+
+            return employees;
         }
-        public async Task<bool> Create(CreateEmployeeViewModel model)
+        public async Task<Guid> CreateAsync(EmployeeFormModel model)
         {
-            var Employee = new Employee
+            var employee = new Employee
             {
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 JobTitle = model.JobTitle,
                 Salary = model.Salary,
-                DepartmentId = model.Department,
+                DepartmentId = Guid.Parse(model.DepartmentId),
             };
-            context.Employees.Add(Employee);
-            var user = new ApplicationUser
-            {
-                UserName = model.Email,
-                Email = model.Email,
-                EmployeeId = Employee.Id
-            };
-            var isCreated = await userManager.CreateAsync(user, model.Password);
-            if (!isCreated.Succeeded)
-            {
-                return false;
-            }
-            await userManager.AddToRoleAsync(user, model.Role);
 
+            await context.AddAsync(employee);
             await context.SaveChangesAsync();
-            return true;
+
+            return employee.Id;
         }
-        public async Task<List<DepartmentViewModel>> GetAllDepartmentsAsync()
+        public async Task DeleteAsync(string userId)
         {
-            return await context.Departments
-                .Select(d => new DepartmentViewModel
-                {
-                    Id = d.Id,
-                    Name = d.Name
-                })
-                .ToListAsync();
+            var user = await context.Users.FirstAsync(u => u.EmployeeId == Guid.Parse(userId));
+            var employee = await context.Employees.FirstAsync(e => e.Id == user!.EmployeeId);
+
+            context.Employees.Remove(employee);
+
+            await userManager.DeleteAsync(user);
+            await context.SaveChangesAsync();
         }
-        public async Task DeleteEmployeeAndUserAsync(string userId)
-        {
-            var user = context.Users.FirstOrDefault(u => u.Id.ToString() == userId);
-            if (user != null)
-            {
-                var employee = context.Employees.FirstOrDefault(e => e.Id == user.EmployeeId);
-                if (employee != null)
-                {
-                    context.Employees.Remove(employee);
-                }
-                await userManager.DeleteAsync(user);
-                await context.SaveChangesAsync();
-            }
-        }
-        public async Task<CreateEmployeeViewModel> GetEmployeeForEditAsync(string userId)
+        public async Task<EmployeeFormModel> GetEditAsync(string userId)
         {
             var user = await context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == userId);
             if (user == null) return null;
@@ -145,7 +99,7 @@ namespace HCM.Services.Data
             var employee = await context.Employees.FirstOrDefaultAsync(e => e.Id == user.EmployeeId);
             if (employee == null) return null;
 
-            return new CreateEmployeeViewModel
+            return new EmployeeFormModel
             {
                 Id = user.Id.ToString(),
                 FirstName = employee.FirstName,
@@ -153,25 +107,22 @@ namespace HCM.Services.Data
                 Email = user.Email,
                 JobTitle = employee.JobTitle,
                 Salary = employee.Salary,
-                Department = employee.DepartmentId,
-                Role = (await userManager.GetRolesAsync(user)).FirstOrDefault(),
-                Password = "", 
+                DepartmentId = employee.DepartmentId.ToString(),
+                RoleId = (await userManager.GetRolesAsync(user)).FirstOrDefault(),
+                Password = "",
                 ConfirmPassword = ""
             };
         }
-        public async Task UpdateEmployeeAsync(CreateEmployeeViewModel model)
+        public async Task UpdateAsync(EmployeeFormModel model)
         {
-            var user = await context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == model.Id);
-            if (user == null) return;
-
-            var employee = await context.Employees.FirstOrDefaultAsync(e => e.Id == user.EmployeeId);
-            if (employee == null) return;
-
+            var user = await context.Users.FirstAsync(u => u.Id.ToString() == model.Id);
+            var employee = await context.Employees.FirstAsync(e => e.Id == user.EmployeeId);
+            
             employee.FirstName = model.FirstName;
             employee.LastName = model.LastName;
             employee.JobTitle = model.JobTitle;
             employee.Salary = model.Salary;
-            employee.DepartmentId = model.Department;
+            employee.DepartmentId = Guid.Parse(model.DepartmentId);
 
             user.Email = model.Email;
             user.UserName = model.Email;
@@ -183,10 +134,10 @@ namespace HCM.Services.Data
             }
 
             var currentRoles = await userManager.GetRolesAsync(user);
-            if (!currentRoles.Contains(model.Role))
+            if (!currentRoles.Contains(model.RoleId))
             {
                 await userManager.RemoveFromRolesAsync(user, currentRoles);
-                await userManager.AddToRoleAsync(user, model.Role);
+                await userManager.AddToRoleAsync(user, model.RoleId);
             }
 
             await context.SaveChangesAsync();

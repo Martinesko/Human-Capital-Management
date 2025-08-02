@@ -3,6 +3,7 @@ using HCM.Data.Models;
 using HCM.Services.Data;
 using HCM.Services.Data.Contracts;
 using HCM.Web.Infrastructure.Extensions;
+using HCM.Web.ViewModels.Role;
 using Microsoft.EntityFrameworkCore;
 
 namespace HCM.Web;
@@ -36,7 +37,11 @@ public class Program
         builder.Services.AddRazorPages();
 
 
+        builder.Services.AddScoped<IDepartmentManagerService, DepartmentManagerService>();
+        builder.Services.AddScoped<IDepartmentService, DepartmentService>();
         builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+        builder.Services.AddScoped<IRoleService, RoleService>();
+
 
         var app = builder.Build();
 

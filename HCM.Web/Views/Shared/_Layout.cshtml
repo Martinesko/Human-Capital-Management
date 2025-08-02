@@ -8,14 +8,10 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/HCM.Web.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/hcm-home.css" />
-
-    @RenderSection("Styles", required: false)
+    @await RenderSectionAsync("Styles", required: false)
 </head>
 
 <body>
-    @if (User.Identity.IsAuthenticated)
-    {
-    }
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

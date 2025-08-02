@@ -1,18 +1,14 @@
 ﻿using HCM.Web.ViewModels.Employee;
-using HCM.Web.ViewModels.Department;    
-using Microsoft.AspNetCore.Mvc;
 
 namespace HCM.Services.Data.Contracts
 {
     public interface IEmployeeService
     {
-        EmployeeInfoViewModel? GetEmployeeInfoByUserId(string userId);
-        Task<List<EmployeeUserViewModel>> GetAllEmployeesAync();
-        Task<bool> Create(CreateEmployeeViewModel model);
-        Task<List<DepartmentViewModel>> GetAllDepartmentsAsync();
-        Task DeleteEmployeeAndUserAsync(string userId);
-        Task<CreateEmployeeViewModel> GetEmployeeForEditAsync(string userId);
-        Task UpdateEmployeeAsync(CreateEmployeeViewModel model);
-
+        Task<ProfileViewModel> GetByIdAsync(string userId);
+        Task<ICollection<EmployeeViewModel>> AllAsync(EmployeeAllViewModel model, string id, bool isAdmin);
+        Task<Guid> CreateAsync(EmployeeFormModel model);
+        Task DeleteAsync(string userId);
+        Task<EmployeeFormModel> GetEditAsync(string userId);
+        Task UpdateAsync(EmployeeFormModel model);
     }
 }

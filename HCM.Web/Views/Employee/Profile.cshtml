@@ -1,0 +1,30 @@
+﻿@{
+    ViewData["Title"] = "Profile";
+}
+<div class="hcm-login-center">
+        <div class="employee-info-card">
+            <h1>Personal Information</h1>
+            <p class="hcm-login-subtitle">View your personal details below.</p>
+            <div class="hcm-login-form">
+                <div><strong>Full Name:</strong> @Model.FullName</div>
+                <div><strong>Email:</strong> @Model.Email</div>
+                <div><strong>Role:</strong> @Model.Role</div>
+                <div><strong>Department:</strong> @Model.Department</div>
+                <div><strong>Job Title:</strong> @Model.JobTitle</div>
+                <div><strong>Salary:</strong> @Model.Salary.ToString("C")</div>
+            </div>
+            <div class="employee-info-actions">
+                <a asp-area="Identity" asp-page="/Account/Manage/ChangePassword" class="employee-info-btn-change">
+                    Change Password
+                </a>
+                <form method="post" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="/">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="employee-info-btn-logout">Log Out</button>
+                </form>
+                @if (User.IsInRole(ManagerRoleName))
+                {
+                    <a href="/" class="btn btn-secondary">Back</a>
+                }
+            </div>
+        </div>
+    </div>

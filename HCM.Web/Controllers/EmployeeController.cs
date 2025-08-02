@@ -1,84 +1,103 @@
 ﻿using HCM.Services.Data.Contracts;
+using HCM.Web.ViewModels.Employee;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 using X.PagedList.Extensions;
 using static HCM.Common.HCMConstants.RoleConstants;
+using static HCM.Common.HCMConstants.GeneralConstants;
+using Microsoft.AspNetCore.Identity;
+using HCM.Data.Models;
+using static HCM.Common.ValidaitonConstants;
+using HCM.Web.ViewModels.DepartmentManagerService;
 
 namespace HCM.Web.Controllers
 {
-    [Authorize(Roles = $"{HRAdminRoleName},{ManagerRoleName}")]
+    [Authorize]
     public class EmployeeController : Controller
     {
-        private IEmployeeService employeeService;
+        private readonly IEmployeeService employeeService;
+        private readonly IDepartmentService departmentService;
+        private readonly IDepartmentManagerService departmentManagerService;
+        private readonly IRoleService roleService;
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly IUserStore<ApplicationUser> userStore;
+        private readonly IUserEmailStore<ApplicationUser> emailStore;
 
-        public EmployeeController(IEmployeeService employeeService)
+        public EmployeeController(IEmployeeService employeeService, IDepartmentService departmentService, IRoleService roleService, UserManager<ApplicationUser> userManager,IUserStore<ApplicationUser> userStore, IDepartmentManagerService departmentManagerService)
         {
             this.employeeService = employeeService;
+            this.departmentService = departmentService;
+            this.roleService = roleService;
+            this.userManager = userManager;
+            this.userStore = userStore;
+            emailStore = (IUserEmailStore<ApplicationUser>)userStore;
+            this.departmentManagerService = departmentManagerService;
         }
 
-        public async Task<IActionResult> Index(int page = 1)
+        [Authorize(Roles = $"{EmployeeRoleName},{ManagerRoleName}")]
+        public async Task<IActionResult> Profile()
         {
-
-            int pageSize = 5;
-            var employees = await employeeService.GetAllEmployeesAync();
-
-            if (User.IsInRole(ManagerRoleName))
-            {
-                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                var managerInfo = employeeService.GetEmployeeInfoByUserId(userId);
-                var departmentName = managerInfo?.Department;
-
-                employees = employees.Where(e => e.Department == departmentName).ToList();
-
-                ViewBag.DepartmentName = departmentName;
-                ViewBag.IsManager = true;
-            }
-            else
-            {
-                ViewBag.DepartmentName = "All Employees";
-                ViewBag.IsManager = false;
-            }
-
-            var pagedEmployees = employees.ToPagedList(page, pageSize);
-            return View(pagedEmployees);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var model = await employeeService.GetByIdAsync(userId!);
+            return View(model);
         }
 
-        [Authorize(Roles = HRAdminRoleName)]
-        [HttpPost]
-        public async Task<IActionResult> Create(CreateEmployeeViewModel model)
+        [Authorize(Roles = $"{ManagerRoleName},{HRAdminRoleName}")]
+        public async Task<IActionResult> All([FromQuery] EmployeeAllViewModel model)
         {
-            ViewBag.Departments = await employeeService.GetAllDepartmentsAsync();
-            ViewBag.Roles = new List<SelectListItem>
-                    {
-                        new SelectListItem { Value = "Manager", Text = "Manager" },
-                        new SelectListItem { Value = "Employee", Text = "Employee" }
-                    };
-            if (ModelState.IsValid)
-            {
-                var result = await employeeService.Create(model);
-                if (result == null)
-                {
-                    ModelState.AddModelError(string.Empty, "Failed to create employee. Please check your input or try again later.");
-                    return View(model);
-                }
-                return RedirectToAction("Index", "Employee");
-            }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            var isAdmin = User.IsInRole(HRAdminRoleName);
+
+            var employees = await employeeService.AllAsync(model, userId, isAdmin);
+
+            model.Employees = employees.ToPagedList(model.CurrentPage, EntitiesPerPage);
+
             return View(model);
         }
 
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            var departments = await employeeService.GetAllDepartmentsAsync();
-            ViewBag.Departments = departments;
-            ViewBag.Roles = new List<SelectListItem>
-            {
-            new SelectListItem { Value = "Manager", Text = "Manager" },
-            new SelectListItem { Value = "Employee", Text = "Employee" }
-            };
+            ViewBag.Departments = await departmentService.AllAsync(); 
+            ViewBag.Roles = await roleService.AllAsync();
             return View();
+        }
+
+        [Authorize(Roles = HRAdminRoleName)]
+        [HttpPost]
+        public async Task<IActionResult> Create(EmployeeFormModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Departments = await departmentService.AllAsync();
+                ViewBag.Roles = await roleService.AllAsync();
+                return View(model);
+            }
+
+            var user = new ApplicationUser();
+
+            var employeeId = await employeeService.CreateAsync(model);
+
+            await departmentManagerService.CreateAsync(new DepartmentManagerViewModel
+            {
+                DepartmentId = model.DepartmentId,
+                ManagerId = employeeId.ToString()
+            });
+
+            user.UsersRoles.Add(new ApplicationUserRole
+            {
+                RoleId = Guid.Parse(model.RoleId),
+            });
+
+            user.EmployeeId = employeeId;
+          
+            await userStore.SetUserNameAsync(user, model.Email, CancellationToken.None);
+            await emailStore.SetEmailAsync(user, model.Email, CancellationToken.None);
+            await userManager.CreateAsync(user, model.Password);
+
+            return RedirectToAction("All");
         }
 
 
@@ -86,55 +105,44 @@ namespace HCM.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
-            await employeeService.DeleteEmployeeAndUserAsync(id);
-            return RedirectToAction("Index");
+            await departmentManagerService.DeleteAsync(id);
+            await employeeService.DeleteAsync(id);
+            return RedirectToAction("All");
         }
 
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
-            var model = await employeeService.GetEmployeeForEditAsync(id);
-            ViewBag.Departments = await employeeService.GetAllDepartmentsAsync();
-            ViewBag.Roles = new List<SelectListItem>
-            {
-              new SelectListItem { Value = "Manager", Text = "Manager" },
-              new SelectListItem { Value = "Employee", Text = "Employee" }
-            };
-            return View("Create", model);
+            var model = await employeeService.GetEditAsync(id);
+            ViewBag.Departments = await departmentService.AllAsync();
+            ViewBag.Roles = await roleService.AllAsync();
+            return View(model);
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> Edit(CreateEmployeeViewModel model)
+        public async Task<IActionResult> Edit(EmployeeFormModel model)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Departments = await employeeService.GetAllDepartmentsAsync();
-                ViewBag.Roles = new List<SelectListItem>
-        {
-            new SelectListItem { Value = "Manager", Text = "Manager" },
-            new SelectListItem { Value = "Employee", Text = "Employee" }
-        };
-                return View("Create", model);
+                ViewBag.Departments = await departmentService.AllAsync();
+                ViewBag.Roles = await roleService.AllAsync();
+                return View(model);
             }
 
             try
             {
-                await employeeService.UpdateEmployeeAsync(model);
+                await employeeService.UpdateAsync(model);
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError(string.Empty, $"Failed to update employee: {ex.Message}");
-                ViewBag.Departments = await employeeService.GetAllDepartmentsAsync();
-                ViewBag.Roles = new List<SelectListItem>
-        {
-            new SelectListItem { Value = "Manager", Text = "Manager" },
-            new SelectListItem { Value = "Employee", Text = "Employee" }
-        };
-                return View("Create", model);
+                ViewBag.Departments = await departmentService.AllAsync();
+                ViewBag.Roles = await roleService.AllAsync();
+                return View(model);
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("All");
         }
 
 

@@ -2,8 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using static HCM.Common.HCMConstants.DepartmentConstants;
-using static HCM.Common.HCMConstants.EmployeeConstants;
+using static HCM.Common.SeedConstants.DepartmentConstants;
+using static HCM.Common.SeedConstants.EmployeeConstants;
 
 namespace HCM.Data.Configurations
 {
@@ -11,14 +11,14 @@ namespace HCM.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<DepartmentManager> builder)
         {
-            builder.HasData(new DepartmentManager[]
-            {
+            builder.HasData(
+            [
                 new DepartmentManager
                 {
                     ManagerId = Guid.Parse(BobId),
                     DepartmentId = Guid.Parse(Finance)
                 }
-            });
+            ]);
         }
     }
 }
