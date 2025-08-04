@@ -61,7 +61,7 @@ namespace HCM.Web.Infrastructure.Extensions
             return app;
         }
 
-        public static IApplicationBuilder SeedManagerUserAndDepartmentManager(this IApplicationBuilder app)
+        public static IApplicationBuilder SeedManagerUsers(this IApplicationBuilder app)
         {
             using (var scope = app.ApplicationServices.CreateScope())
             {
@@ -71,7 +71,7 @@ namespace HCM.Web.Infrastructure.Extensions
                 var managerEmail = ManagerEmail;
                 var managerPassword = ManagerPassword;
                 var managerUser = userManager.FindByEmailAsync(managerEmail).Result;
-                
+
                 if (managerUser == null)
                 {
                     var manager = new ApplicationUser
@@ -79,13 +79,13 @@ namespace HCM.Web.Infrastructure.Extensions
                         UserName = managerEmail,
                         Email = managerEmail,
                         EmailConfirmed = true,
-                        EmployeeId = Guid.Parse(BobId) 
+                        EmployeeId = Guid.Parse(BobId)
                     };
                     userManager.CreateAsync(manager, managerPassword).Wait();
                     userManager.AddToRoleAsync(manager, ManagerRoleName).Wait();
                 }
 
-                Guid departmentId = Guid.Parse(Finance); 
+                Guid departmentId = Guid.Parse(Finance);
                 bool exists = dbContext.DepartmentsManagers
                     .Any(dm => dm.ManagerId == Guid.Parse(BobId) && dm.DepartmentId == departmentId);
                 if (!exists)

@@ -2,14 +2,13 @@
 
 @{
     ViewData["Title"] = "Employees";
-    bool isManager = User.IsInRole(ManagerRoleName);
 }
 
 <div class="container">
     <div class="header">
         <h1>Employees</h1>
         <div class="header-buttons">
-            @if (!isManager)
+            @if (!User.IsInRole(ManagerRoleName))
             {
                 <a asp-controller="Employee" asp-action="Create" class="add-btn">Create</a>
             }
@@ -26,8 +25,8 @@
                     <th>Email</th>
                     <th>Salary</th>
                     <th>Role</th>
-                    <th>Department</th>
                     <th>Job Title</th>
+                    <th>Department</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -43,10 +42,10 @@
                         <td>@employee.JobTitle</td>
                         <td>@employee.Department</td>
                         <td>
-                            <a asp-controller="Employee" asp-action="Edit" asp-route-id="@employee.Id" class="edit-btn">Edit</a>
-                            @if (!isManager)
+                            <a asp-controller="Employee" asp-action="Edit" asp-route-id="@employee.EmployeeId" class="edit-btn">Edit</a>
+                            @if (!User.IsInRole(ManagerRoleName))
                             {
-                                <form asp-controller="Employee" asp-action="Delete" asp-route-id="@employee.Id" method="post" style="display:inline;">
+                                <form asp-controller="Employee" asp-action="Delete" asp-route-UserId="@employee.UserId" asp-route-employeeId="@employee.EmployeeId" method="post" style="display:inline;">
                                     <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete this employee?');">Delete</button>
                                 </form>
                             }
@@ -60,16 +59,17 @@
     @if (Model.Employees.Any())
     {
         @Html.PagedListPager(Model.Employees,
-            CurrentPage => Url.Action("All", "Employee", new 
-            {
-                CurrentPage,
-            }),
-            new PagedListRenderOptions
-            {
-                LiElementClasses = new string[] { "page-item" },
-                PageClasses = new string[] { "page-link" },
-                MaximumPageNumbersToDisplay = 3
-            });
+                CurrentPage => Url.Action("All", "Employee", new
+                {
+                    CurrentPage,
+                }),
+                new PagedListRenderOptions
+    {
+        LiElementClasses = new string[] { "page-item" },
+        PageClasses = new string[] { "page-link" },
+        MaximumPageNumbersToDisplay = 3
+    })
+        ;
     }
 </div>
 

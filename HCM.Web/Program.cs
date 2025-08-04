@@ -3,7 +3,6 @@ using HCM.Data.Models;
 using HCM.Services.Data;
 using HCM.Services.Data.Contracts;
 using HCM.Web.Infrastructure.Extensions;
-using HCM.Web.ViewModels.Role;
 using Microsoft.EntityFrameworkCore;
 
 namespace HCM.Web;
@@ -15,10 +14,9 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-       
-        builder.Services.AddDbContext<HcmDbContext>(options =>
-            options.UseSqlServer(connectionString));
-        
+
+        builder.Services.AddDbContext<HcmDbContext>(options => options.UseSqlServer(connectionString));
+
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
         builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
@@ -30,25 +28,22 @@ public class Program
             options.Password.RequiredLength = builder.Configuration.GetValue<int>("Identity:Password:RequiredLength");
             options.Password.RequireDigit = builder.Configuration.GetValue<bool>("Identity:Password:RequireDigit");
         })
-                .AddRoles<ApplicationRole>()
-                .AddEntityFrameworkStores<HcmDbContext>();
+            .AddRoles<ApplicationRole>()
+            .AddEntityFrameworkStores<HcmDbContext>();
 
         builder.Services.AddControllersWithViews();
         builder.Services.AddRazorPages();
 
-
-        builder.Services.AddScoped<IDepartmentManagerService, DepartmentManagerService>();
         builder.Services.AddScoped<IDepartmentService, DepartmentService>();
         builder.Services.AddScoped<IEmployeeService, EmployeeService>();
-        builder.Services.AddScoped<IRoleService, RoleService>();
-
+        builder.Services.AddScoped<IUserService, UserService>();
 
         var app = builder.Build();
 
         app.SeedRoles();
         app.SeedHRAdminUser();
         app.SeedEmployeeUsers();
-        app.SeedManagerUserAndDepartmentManager();
+        app.SeedManagerUsers();
 
         if (app.Environment.IsDevelopment())
         {
@@ -56,7 +51,6 @@ public class Program
         }
         else
         {
-            app.UseExceptionHandler("/Home/Error");
             app.UseHsts();
         }
 

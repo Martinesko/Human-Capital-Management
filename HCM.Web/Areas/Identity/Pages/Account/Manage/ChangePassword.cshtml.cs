@@ -15,7 +15,7 @@ namespace HCM.Web.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        
+
         public ChangePasswordModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager)
@@ -56,14 +56,14 @@ namespace HCM.Web.Areas.Identity.Pages.Account.Manage
 
         }
 
-            public async Task<IActionResult> OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
-                        
+
             var hasPassword = await _userManager.HasPasswordAsync(user);
             if (!hasPassword)
             {
@@ -85,7 +85,7 @@ namespace HCM.Web.Areas.Identity.Pages.Account.Manage
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
-            
+
             if (Input.OldPassword == Input.NewPassword)
             {
                 ModelState.AddModelError("Input.NewPassword", "The new password cannot be the same as the current password.");
@@ -109,7 +109,6 @@ namespace HCM.Web.Areas.Identity.Pages.Account.Manage
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your password has been changed.";
-            user.IsPasswordChanged = true;
 
             await _userManager.UpdateAsync(user);
 

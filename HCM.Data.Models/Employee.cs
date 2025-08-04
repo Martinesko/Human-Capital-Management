@@ -1,7 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Security.Cryptography.X509Certificates;
 using static HCM.Common.ValidaitonConstants.Employee;
 
 namespace HCM.Data.Models
@@ -12,7 +10,6 @@ namespace HCM.Data.Models
         {
             ManagedDepartments = new HashSet<DepartmentManager>();
             Users = new HashSet<ApplicationUser>();
-            //IsDeleted = false;
         }
 
         [Key]
@@ -31,8 +28,6 @@ namespace HCM.Data.Models
 
         [ForeignKey(nameof(Department))]
         public Guid DepartmentId { get; set; }
-
-        //public bool IsDeleted { get; set; } = false;
 
         public virtual Department Department { get; set; } = null!;
         public virtual ICollection<DepartmentManager> ManagedDepartments { get; set; }

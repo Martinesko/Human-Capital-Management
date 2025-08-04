@@ -1,11 +1,9 @@
-﻿@{
+﻿@model EmployeeCreateFormModel
+
+@{
     ViewData["Title"] = "Create";
 }
 
-@using HCM.Common
-@model EmployeeFormModel
-
-<link rel="stylesheet" href="~/css/employee-create.css" asp-append-version="true" />
 <div class="container">
     <div class="header">
         <h1>Create Employee</h1>
@@ -18,29 +16,19 @@
             <div class="form-group">
                 <label asp-for="FirstName"></label>
                 <input asp-for="FirstName"
-                       class="form-control"
-                       maxlength="@ValidaitonConstants.Employee.FirstNameMaxLength" />
+                       class="form-control" />
                 <span asp-validation-for="FirstName" class="small text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="LastName"></label>
                 <input asp-for="LastName"
-                       class="form-control"
-                       maxlength="@ValidaitonConstants.Employee.LastNameMaxLength" />
+                       class="form-control" />
                 <span asp-validation-for="LastName" class="small text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email"></label>
-                <input asp-for="Email"
-                       class="form-control"
-                       maxlength="@ValidaitonConstants.Employee.EmailMaxLength" />
-                <span asp-validation-for="Email" class="small text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="JobTitle"></label>
                 <input asp-for="JobTitle"
-                       class="form-control"
-                       maxlength="@ValidaitonConstants.Employee.JobTitleMaxLength" />
+                       class="form-control" />
                 <span asp-validation-for="JobTitle" class="small text-danger"></span>
             </div>
             <div class="form-group">
@@ -56,39 +44,45 @@
                 <span asp-validation-for="DepartmentId" class="small text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="RoleId"></label>
-                <select asp-for="RoleId"
-                        asp-items="@(new SelectList(ViewBag.Roles, "Id", "Name"))"
+                <label asp-for="RoleName"></label>
+                <select asp-for="RoleName"
+                        asp-items="@(new SelectList(ViewBag.Roles))"
                         class="form-control"></select>
-                <span asp-validation-for="RoleId" class="small text-danger"></span>
-            </div
-                <div class="form-group">
-                    <label asp-for="Password"></label>
-                    <input asp-for="Password"
-                           type="password"
-                           class="form-control"
-                           minlength="@ValidaitonConstants.Employee.PasswordMinLength"
-                           maxlength="@ValidaitonConstants.Employee.PasswordMaxLength" />
-                    <span asp-validation-for="Password" class="small text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="ConfirmPassword"></label>
-                    <input asp-for="ConfirmPassword"
-                           type="password"
-                           class="form-control"
-                           minlength="@ValidaitonConstants.Employee.PasswordMinLength"
-                           maxlength="@ValidaitonConstants.Employee.PasswordMaxLength" />
-                    <span asp-validation-for="ConfirmPassword" class="small text-danger"></span>
-                </div>
+                <span asp-validation-for="RoleName" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email"></label>
+                <input asp-for="Email"
+                       class="form-control" />
+                <span asp-validation-for="Email" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password"></label>
+                <input asp-for="Password"
+                       type="password"
+                       class="form-control" />
+                <span asp-validation-for="Password" class="small text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConfirmPassword"></label>
+                <input asp-for="ConfirmPassword"
+                       type="password"
+                       class="form-control" />
+                <span asp-validation-for="ConfirmPassword" class="small text-danger"></span>
+            </div>
             <div class="form-actions">
                 <button type="submit" class="btn btn-success">
-                    Create Employee
+                    Create
                 </button>
-                <a href="/Employee" class="btn btn-secondary">Cancel</a>
+                <a asp-controller="Employee" asp-action="All" class="btn btn-secondary">Cancel</a>
             </div>
         </form>
     </div>
 </div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/employee-create.css" asp-append-version="true" />
+}
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

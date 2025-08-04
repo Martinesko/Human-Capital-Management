@@ -12,9 +12,9 @@ namespace HCM.Data
         IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>
     {
 
-        bool seed;
+        private readonly bool seed;
 
-        public HcmDbContext(DbContextOptions<HcmDbContext> options , bool seed = true) : base(options) 
+        public HcmDbContext(DbContextOptions<HcmDbContext> options, bool seed = true) : base(options)
         {
             if (!Database.IsRelational())
             {
@@ -22,7 +22,6 @@ namespace HCM.Data
             }
             this.seed = seed;
         }
-
 
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Department> Departments { get; set; }

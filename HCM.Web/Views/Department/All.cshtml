@@ -1,0 +1,63 @@
+﻿@model DepartmentAllViewModel
+
+@{
+    ViewData["Title"] = "Departments";
+}
+
+<div class="container">
+    <div class="header">
+        <h1>Departments</h1>
+        <div class="header-buttons">
+            <a asp-controller="Department" asp-action="Create" class="add-btn">Create</a>
+            <a asp-controller="Home" asp-action="Index" class="back-btn">Back</a>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="employee-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var department in Model.Departments)
+                {
+                    <tr>
+                        <td>@department.Name</td>
+                        <td>
+                            <a asp-controller="Department" asp-action="Edit" asp-route-id="@department.Id" class="edit-btn">Edit</a>
+                            @if (true)
+                            {
+                                <form asp-controller="Department" asp-action="Delete" asp-route-id="@department.Id" method="post" style="display:inline;">
+                                    <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete this department?');">Delete</button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (Model.Departments.Any())
+    {
+        @Html.PagedListPager(Model.Departments,
+                CurrentPage => Url.Action("All", "Department", new
+                {
+                    CurrentPage,
+                }),
+                new PagedListRenderOptions
+    {
+        LiElementClasses = new string[] { "page-item" },
+        PageClasses = new string[] { "page-link" },
+        MaximumPageNumbersToDisplay = 3
+    })
+        ;
+    }
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/employee-index.css" />
+}

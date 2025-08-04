@@ -13,7 +13,7 @@ namespace HCM.Data.Models
 
         [Key]
         public Guid Id { get; set; }
-      
+
         [MaxLength(NameMaxLength)]
         public string Name { get; set; } = null!;
 

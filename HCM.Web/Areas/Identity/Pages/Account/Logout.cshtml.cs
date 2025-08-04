@@ -13,7 +13,7 @@ namespace HCM.Web.Areas.Identity.Pages.Account
         private readonly ILogger<LogoutModel> _logger;
 
         public LogoutModel(SignInManager<ApplicationUser> signInManager, ILogger<LogoutModel> logger)
-        { 
+        {
             _signInManager = signInManager;
             _logger = logger;
         }

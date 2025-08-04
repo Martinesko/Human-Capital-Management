@@ -1,4 +1,4 @@
-﻿namespace HCM.Web.ViewModels.Employee
+﻿namespace HCM.Web.ViewModels.User
 {
     public class ProfileViewModel
     {
@@ -8,6 +8,5 @@
         public decimal Salary { get; set; }
         public string Department { get; set; } = null!;
         public string Role { get; set; } = null!;
-        public bool IsPasswordChanged { get; set; }
     }
 }

@@ -9,18 +9,21 @@
         </div>
         <div class="employee-info-actions">
             <a asp-controller="Employee" asp-action="All" class="employee-info-btn-yellow">
-                Manage employees
+                Manage Employees
             </a>
+            @if (User.IsInRole(HRAdminRoleName))
+            {
+                <a asp-controller="Department" asp-action="All" class="employee-info-btn-yellow">
+                    Manage Departments
+                </a>
+                <a asp-area="Identity" asp-page="/Account/Manage/ChangePassword" class="employee-info-btn-change">
+                    Change password
+                </a>
+            }
             @if (User.IsInRole(ManagerRoleName))
             {
                 <a asp-controller="Employee" asp-action="Profile" class="employee-info-btn-change">
                     View Profile
-                </a>
-            }
-            else
-            {
-                <a asp-area="Identity" asp-page="/Account/Manage/ChangePassword" class="employee-info-btn-change">
-                    Change password
                 </a>
             }
             <form method="post" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="/">

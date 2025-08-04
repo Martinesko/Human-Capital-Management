@@ -4,11 +4,9 @@ namespace HCM.Services.Data.Contracts
 {
     public interface IEmployeeService
     {
-        Task<ProfileViewModel> GetByIdAsync(string userId);
-        Task<ICollection<EmployeeViewModel>> AllAsync(EmployeeAllViewModel model, string id, bool isAdmin);
-        Task<Guid> CreateAsync(EmployeeFormModel model);
+        Task<ICollection<EmployeeViewModel>> GetAllAsync(EmployeeAllViewModel model, string id, bool isAdmin);
+        Task<EmployeeCreateFormModel> GetCreateAsync(string id);
+        Task<EmployeeEditFormModel> GetEditAsync(string id);
         Task DeleteAsync(string userId);
-        Task<EmployeeFormModel> GetEditAsync(string userId);
-        Task UpdateAsync(EmployeeFormModel model);
     }
 }

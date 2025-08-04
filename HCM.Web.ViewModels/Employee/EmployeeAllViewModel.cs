@@ -11,7 +11,6 @@ namespace HCM.Web.ViewModels.Employee
         }
 
         public int CurrentPage { get; set; }
-
         public IPagedList<EmployeeViewModel> Employees { get; set; } = null!;
     }
 }

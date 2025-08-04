@@ -3,14 +3,16 @@ using static HCM.Common.ValidaitonConstants.Employee;
 
 namespace HCM.Web.ViewModels.Employee
 {
-    public class EmployeeFormModel
+    public class EmployeeEditFormModel
     {
-        public string? Id { get; set; }
+        public string Id { get; set; } = null!;
 
         [MaxLength(FirstNameMaxLength)]
+        [Display(Name = FirstNameDisplayName)]
         public string FirstName { get; set; } = null!;
 
         [MaxLength(LastNameMaxLength)]
+        [Display(Name = LastNameDisplayName)]
         public string LastName { get; set; } = null!;
 
         [EmailAddress]
@@ -18,21 +20,25 @@ namespace HCM.Web.ViewModels.Employee
         public string Email { get; set; } = null!;
 
         [MaxLength(JobTitleMaxLength)]
+        [Display(Name = JobTitleDisplayName)]
         public string JobTitle { get; set; } = null!;
 
         public decimal Salary { get; set; }
 
+        [Display(Name = DepartmentDisplayName)]
         public string DepartmentId { get; set; } = null!;
 
-        public string RoleId { get; set; } = null!;
+        [Display(Name = RoleDisplayName)]
+        public string RoleName { get; set; } = null!;
 
         [DataType(DataType.Password)]
         [MinLength(PasswordMinLength)]
         [MaxLength(PasswordMaxLength)]
-        public string Password { get; set; } = null!;
+        public string? Password { get; set; }
 
         [DataType(DataType.Password)]
+        [Display(Name = ConfirmPasswordDisplayName)]
         [Compare(nameof(Password), ErrorMessage = PasswordsDontMatch)]
-        public string ConfirmPassword { get; set; } = null!;
+        public string? ConfirmPassword { get; set; }
     }
 }

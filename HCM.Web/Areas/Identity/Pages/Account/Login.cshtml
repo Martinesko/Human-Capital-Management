@@ -1,37 +1,34 @@
 ﻿@page
-@using static HCM.Common.ValidaitonConstants.Employee;
-@model HCM.Web.Areas.Identity.Pages.Account.LoginModel
+@model LoginModel
 @{
     ViewData["Title"] = "Log in";
 }
-
-<link rel="stylesheet" href="~/css/hcm-login.css" />
 
 <div class="login-container">
     <h2>@ViewData["Title"]</h2>
     <form method="post">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-
         <div class="form-group">
             <label asp-for="Input.Email"></label>
             <input asp-for="Input.Email"
-                   class="form-control"
-                   maxlength="@EmailMaxLength" />
+                   class="form-control" />
             <span asp-validation-for="Input.Email" class="small text-danger"></span>
         </div>
         <div class="form-group">
             <label asp-for="Input.Password"></label>
             <input asp-for="Input.Password"
                    class="form-control"
-                   type="password"
-                   minlength="@PasswordMinLength"
-                   maxlength="@PasswordMaxLength" />
+                   type="password" />
             <span asp-validation-for="Input.Password" class="small text-danger"></span>
         </div>
         <button type="submit" class="btn btn-success">Log in</button>
-        <a href="javascript:history.back()" class="back-btn">Go Back</a>
+        <a asp-area="" asp-controller="Home" asp-action="Index" class="back-btn">Go Back</a>
     </form>
 </div>
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/hcm-login.css" />
+}
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

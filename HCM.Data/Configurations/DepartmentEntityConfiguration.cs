@@ -1,7 +1,7 @@
-﻿using HCM.Data.Models;
+﻿using System;
+using HCM.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
 using static HCM.Common.SeedConstants.DepartmentConstants;
 
 namespace HCM.Data.Configurations

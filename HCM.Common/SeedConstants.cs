@@ -28,7 +28,6 @@
 
             public const string CarolEmail = "carol.williams@example.com";
             public const string CarolPassword = "CarolPassword123!";
-
         }
     }
 }
