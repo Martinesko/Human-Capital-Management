@@ -9,7 +9,6 @@ namespace HCM.Data.Models
         public Employee()
         {
             ManagedDepartments = new HashSet<DepartmentManager>();
-            Users = new HashSet<ApplicationUser>();
         }
 
         [Key]
@@ -31,6 +30,6 @@ namespace HCM.Data.Models
 
         public virtual Department Department { get; set; } = null!;
         public virtual ICollection<DepartmentManager> ManagedDepartments { get; set; }
-        public virtual ICollection<ApplicationUser> Users { get; set; }
+        public virtual ApplicationUser? User { get; set; }
     }
 }

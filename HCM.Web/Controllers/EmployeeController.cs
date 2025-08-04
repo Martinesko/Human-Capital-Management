@@ -72,22 +72,24 @@ namespace HCM.Web.Controllers
                 return View(model);
             }
 
-            var user = new ApplicationUser
+            var employee = new Employee
             {
-                Employee = new Employee()
-                {
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                    JobTitle = model.JobTitle,
-                    Salary = model.Salary,
-                    DepartmentId = Guid.Parse(model.DepartmentId)
-                }
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                JobTitle = model.JobTitle,
+                Salary = model.Salary,
+                DepartmentId = Guid.Parse(model.DepartmentId)
             };
 
             if (model.RoleName == ManagerRoleName)
             {
-                user.Employee.ManagedDepartments.Add(new DepartmentManager() { DepartmentId = Guid.Parse(model.DepartmentId) });
+                employee.ManagedDepartments.Add(new DepartmentManager() { DepartmentId = Guid.Parse(model.DepartmentId) });
             }
+
+            var user = new ApplicationUser
+            {
+                Employee = employee
+            };
 
             await userStore.SetUserNameAsync(user, model.Email, CancellationToken.None);
             await emailStore.SetEmailAsync(user, model.Email, CancellationToken.None);

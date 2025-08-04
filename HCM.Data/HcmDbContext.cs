@@ -39,6 +39,11 @@ namespace HCM.Data
                 .WithMany(e => e.ManagedDepartments)
                 .HasForeignKey(dm => dm.ManagerId)
                 .OnDelete(DeleteBehavior.Restrict);
+                
+            modelBuilder.Entity<ApplicationUser>()
+                .HasOne(u => u.Employee)
+                .WithOne(e => e.User)
+                .HasForeignKey<ApplicationUser>(u => u.EmployeeId);
 
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(e => e.UsersRoles)

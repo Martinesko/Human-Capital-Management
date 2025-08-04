@@ -4,6 +4,7 @@ using HCM.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HCM.Data.Migrations
 {
     [DbContext(typeof(HcmDbContext))]
-    partial class HcmDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250804004923_UserToEmployeeOneToOne")]
+    partial class UserToEmployeeOneToOne
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -19,19 +19,18 @@ namespace HCM.Services.Data
         {
             var employees = await context.Employees
                 .AsNoTracking()
-                .Where(e => isAdmin || e.Department.Managers.Any(m => m.Manager.Users.First().Id == Guid.Parse(id)))
-                .Where(e => e.Users.Any(u => u.UsersRoles.Any(ur => ur.Role.Name == EmployeeRoleName)))
+                .Where(e => isAdmin || (e.Department.Managers.Any(m => m.Manager.User.Id == Guid.Parse(id)) && e.User.UsersRoles.Any(ur => ur.Role.Name == EmployeeRoleName)))
                 .Select(e => new EmployeeViewModel
                 {
                     EmployeeId = e.Id.ToString(),
-                    UserId = e.Users.First().Id.ToString(),
+                    UserId = e.User.Id.ToString(),
                     FirstName = e.FirstName,
                     LastName = e.LastName,
                     JobTitle = e.JobTitle,
                     Salary = e.Salary,
                     Department = e.Department.Name,
-                    Role = e.Users.First().UsersRoles.First().Role.Name!,
-                    Email = e.Users.First().Email!,
+                    Role = e.User.UsersRoles.First().Role.Name!,
+                    Email = e.User.Email!,
                 })
                 .ToListAsync();
 
@@ -41,7 +40,7 @@ namespace HCM.Services.Data
         public async Task DeleteAsync(string id)
         {
             var employee = await context.Employees
-                .Include(e => e.Users)
+                .Include(e => e.User)
                 .ThenInclude(u => u.UsersRoles)
                 .Include(e => e.ManagedDepartments)
                 .FirstAsync(e => e.Id == Guid.Parse(id));
@@ -63,8 +62,8 @@ namespace HCM.Services.Data
                     JobTitle = e.JobTitle,
                     Salary = e.Salary,
                     DepartmentId = e.DepartmentId.ToString(),
-                    Email = e.Users.First().Email!,
-                    RoleName = e.Users.First().UsersRoles.First().Role.Name!
+                    Email = e.User.Email!,
+                    RoleName = e.User.UsersRoles.First().Role.Name!
                 })
                 .FirstAsync();
         }
@@ -82,8 +81,8 @@ namespace HCM.Services.Data
                     JobTitle = e.JobTitle,
                     Salary = e.Salary,
                     DepartmentId = e.DepartmentId.ToString(),
-                    Email = e.Users.First().Email!,
-                    RoleName = e.Users.First().UsersRoles.First().Role.Name!
+                    Email = e.User.Email!,
+                    RoleName = e.User.UsersRoles.First().Role.Name!
                 })
                 .FirstAsync();
         }

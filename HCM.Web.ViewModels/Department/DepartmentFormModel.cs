@@ -5,7 +5,7 @@ namespace HCM.Web.ViewModels.Department
 {
     public class DepartmentFormModel
     {
-        public string Id { get; set; } = null!;
+        public string? Id { get; set; } = null!;
 
         [Required]
         [MaxLength(NameMaxLength)]
