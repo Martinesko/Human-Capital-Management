@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HCM.Web.Api\HCM.Web.Api.csproj" />
+    <ProjectReference Include="..\HCM.Services.Data\HCM.Services.Data.csproj" />
     <ProjectReference Include="..\HCM.Web.Infrastructure\HCM.Web.Infrastructure.csproj" />
   </ItemGroup>
 
